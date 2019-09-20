@@ -1,0 +1,56 @@
+---
+# Password for root user
+mariadb_root_password: ""
+
+# List of databases which will be created
+databases_to_create: []
+
+# List of databases which will be removed
+databases_to_remove: []
+
+# List of users which will be removed
+users_to_remove: []
+
+# Structure of user's login and password
+# Example of structure:
+# users_to_create:
+#   - login: user1
+#     password: password1
+#   - login: user2
+#     password: password2
+users_to_create: []
+
+# Structure od user's login and list of privileges
+# Example of structure:
+# users_privileges:
+#   - login: user1
+#     privileges:
+#       - "dbname1.*:ALL"
+#       - "dbname2.*:ALL"
+#   - login: user2
+#     privileges:
+#       - "dbname1.*:ALL"
+users_privileges: []
+
+# Structure of script's which will be run on database
+# Example of structure:
+# mariadb_scripts:
+#   - script: script1
+#     database: dbname1
+#   - script: script2
+#     database: dbname1
+mariadb_scripts: []
+
+# Information if host is master or slave
+# Default value: true
+master: true
+
+# Information if replication is enabled or not
+# Default value: false
+replication_enabled: false
+
+# Name of cluster
+replication_cluster_name: "Cluster"
+
+# List of replication hosts ip's
+replication_hosts: []

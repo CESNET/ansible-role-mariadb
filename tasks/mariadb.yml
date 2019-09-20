@@ -1,0 +1,145 @@
+---
+
+- name: MariaDB - Install MariaDB
+  apt:
+    name:
+      - python-pymysql
+      - python-mysqldb
+      - mariadb-server
+    update_cache: yes
+  tags:
+    - install
+
+- name: MariaDB - Check if root password is set
+  shell: >
+    test ! -f /root/.my.cnf && mysqladmin -u root status
+  changed_when: false
+  failed_when: false
+  register: root_pwd_check
+  tags:
+    - install
+
+- name: MariaDB - Disable mariadb login plugin
+  shell: >
+    mysql -u root --execute "use mysql;update user set plugin='' where User='root';flush privileges;"
+  when: root_pwd_check.rc == 0
+  tags:
+    - install
+
+- name: MariaDB - Set MariaDB root password for the first time (root@localhost)
+  mysql_user:
+    check_implicit_admin: yes
+    name: root
+    password: "{{ mariadb_root_password }}"
+    host: localhost
+    state: present
+  when: root_pwd_check.rc == 0
+  tags:
+    - install
+
+- name: MariaDB - Create .mycnf configuration file
+  copy:
+    dest: "/root/.my.cnf"
+    content: |
+      [client]
+      user = root
+      password = {{ mariadb_root_password }}
+  when: root_pwd_check.rc == 0
+  tags:
+    - install
+
+- name: MariaDB - Create a databases
+  mysql_db:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ databases_to_create }}"
+  tags:
+    - install
+    - scheme
+
+- name: MariaDB - Remove a databases
+  mysql_db:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ databases_to_remove }}"
+  tags:
+    - install
+    - scheme
+
+- name: MariaDB - Copy scripts to /tmp/
+  copy:
+    src: "{{ item.script }}.sql"
+    dest: "/tmp/{{ item.script }}.sql"
+  loop: "{{ mariadb_scripts }}"
+  loop_control:
+    label: "{{ item.script }}"
+  when: master
+  tags:
+    - install
+    - scheme
+
+- name: MariaDB - Import a databases
+  mysql_db:
+    name: "{{ item.database }}"
+    state: import
+    target: "/tmp/{{ item.script }}.sql"
+  loop: "{{ mariadb_scripts }}"
+  when: master
+  tags:
+    - install
+    - scheme
+
+- name: MariaDB - Configure a replication
+  template:
+    backup: true
+    src: galera.cnf.j2
+    dest: /etc/mysql/conf.d/galera.cnf
+  when: replication_enabled
+  notify: "restart mariadb"
+
+- name: MariaDB - Create database users
+  mysql_user:
+    name: "{{ item.login }}"
+    password: "{{ item.password }}"
+    state: present
+  loop: "{{ users_to_create }}"
+  loop_control:
+    label: "{{ item.login }}"
+  tags:
+    - configuration
+
+- name: MariaDB - Remove database users
+  mysql_user:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ users_to_remove }}"
+  tags:
+    - configuration
+
+- name: MariaDB - Set privileges
+  mysql_user:
+    name: "{{ item.login }}"
+    priv: "{{ item.privileges|join('/') }}"
+    state: present
+  loop: "{{ users_privileges }}"
+  loop_control:
+    label: "{{ item.login }}"
+  tags:
+    - configuration
+
+
+- name: Stop MariaDb
+  service:
+    state: stopped
+    name: "mysql"
+  tags:
+    - never
+    - start
+
+- name: Start MariaDb
+  service:
+    state: started
+    name: "mysql"
+  tags:
+    - never
+    - start

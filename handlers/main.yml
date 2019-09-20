@@ -1,0 +1,8 @@
+---
+# handlers file for mariadb
+- name: restart MariaDB
+  become: true
+  service:
+    state: restarted
+    name: "mysql"
+  listen: "restart mariadb"
