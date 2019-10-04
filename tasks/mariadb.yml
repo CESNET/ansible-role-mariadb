@@ -52,7 +52,7 @@
   mysql_db:
     name: "{{ item }}"
     state: present
-  loop: "{{ databases_to_create }}"
+  loop: "{{ mariadb_databases_to_create }}"
   tags:
     - install
     - scheme
@@ -61,7 +61,7 @@
   mysql_db:
     name: "{{ item }}"
     state: absent
-  loop: "{{ databases_to_remove }}"
+  loop: "{{ mariadb_databases_to_remove }}"
   tags:
     - install
     - scheme
@@ -73,7 +73,7 @@
   loop: "{{ mariadb_scripts }}"
   loop_control:
     label: "{{ item.script }}"
-  when: master
+  when: mariadb_is_master
   tags:
     - install
     - scheme
@@ -84,7 +84,7 @@
     state: import
     target: "/tmp/{{ item.script }}.sql"
   loop: "{{ mariadb_scripts }}"
-  when: master
+  when: mariadb_is_master
   tags:
     - install
     - scheme
@@ -94,7 +94,7 @@
     backup: true
     src: galera.cnf.j2
     dest: /etc/mysql/conf.d/galera.cnf
-  when: replication_enabled
+  when: mariadb_replication_enabled
   notify: "restart mariadb"
 
 - name: MariaDB - Create database users
@@ -102,7 +102,7 @@
     name: "{{ item.login }}"
     password: "{{ item.password }}"
     state: present
-  loop: "{{ users_to_create }}"
+  loop: "{{ mariadb_users_to_create }}"
   loop_control:
     label: "{{ item.login }}"
   tags:
@@ -112,7 +112,7 @@
   mysql_user:
     name: "{{ item }}"
     state: absent
-  loop: "{{ users_to_remove }}"
+  loop: "{{ mariadb_users_to_remove }}"
   tags:
     - configuration
 
@@ -121,7 +121,7 @@
     name: "{{ item.login }}"
     priv: "{{ item.privileges|join('/') }}"
     state: present
-  loop: "{{ users_privileges }}"
+  loop: "{{ mariadb_users_privileges }}"
   loop_control:
     label: "{{ item.login }}"
   tags:

@@ -9,8 +9,8 @@ wsrep_on=ON
 wsrep_provider=/usr/lib/galera/libgalera_smm.so
 
 # Galera Cluster Configuration
-wsrep_cluster_name="{{ replication_cluster_name }}"
-wsrep_cluster_address="gcomm://{{ replication_hosts|join(',') }}"
+wsrep_cluster_name="{{ mariadb_replication_cluster_name }}"
+wsrep_cluster_address="gcomm://{{ mariadb_replication_hosts|join(',') }}"
 
 # Galera Synchronization Configuration
 wsrep_sst_method=rsync
