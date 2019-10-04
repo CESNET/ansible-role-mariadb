@@ -95,6 +95,8 @@
     src: galera.cnf.j2
     dest: /etc/mysql/conf.d/galera.cnf
   when: mariadb_replication_enabled
+  tags:
+    - configuration
   notify: "restart mariadb"
 
 - name: MariaDB - Create database users
@@ -126,7 +128,6 @@
     label: "{{ item.login }}"
   tags:
     - configuration
-
 
 - name: Stop MariaDb
   service:
