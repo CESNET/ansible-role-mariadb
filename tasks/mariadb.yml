@@ -144,3 +144,6 @@
   tags:
     - never
     - start
+
+- name: "flush handlers"
+  meta: flush_handlers
