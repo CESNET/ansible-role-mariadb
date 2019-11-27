@@ -135,7 +135,7 @@
     name: "mysql"
   tags:
     - never
-    - start
+    - stop
 
 - name: Start MariaDb
   service:
