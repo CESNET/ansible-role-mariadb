@@ -16,6 +16,8 @@ mariadb_users_to_remove: []
 # mariadb_users_to_create:
 #   - login: user1
 #     password: password1
+#     host: host1
+#     privileges: "dbname1.*:ALL"
 #   - login: user2
 #     password: password2
 mariadb_users_to_create: []

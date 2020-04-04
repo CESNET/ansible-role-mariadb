@@ -103,6 +103,8 @@
   mysql_user:
     name: "{{ item.login }}"
     password: "{{ item.password }}"
+    host: "{{ item.host | default(omit) }}"
+    priv: "{{ item.privileges | default(omit) }}"
     state: present
   loop: "{{ mariadb_users_to_create }}"
   loop_control:

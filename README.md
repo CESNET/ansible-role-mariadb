@@ -9,12 +9,14 @@ Ansible galaxy role cesnet.mariadb that installs and configures MariaDB.
 * mariadb_root_password - Password for root user
 * mariadb_databases_to_create - List of databases which will be created
 * mariadb_databases_to_remove - List of databases which will be removed
-* mariadb_users_to_create - Structure of user's login and password
+* mariadb_users_to_create - Structure of user's login and password, and optional host and database privileges
     * Example of structure: 
         ```
         mariadb_users_to_create:
           - login: user1
             password: password1
+            host: "%"
+            privileges: "dbname1.*:ALL"
           - login: user2
             password: password2
         ```
