@@ -50,5 +50,5 @@ Ansible galaxy role cesnet.mariadb that installs and configures MariaDB.
   remote_user: root
   vars:
   roles:
-    - cesmet.mariadb
+    - cesnet.mariadb
 ```

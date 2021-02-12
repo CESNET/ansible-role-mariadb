@@ -16,5 +16,5 @@ wsrep_cluster_address="gcomm://{{ mariadb_replication_hosts|join(',') }}"
 wsrep_sst_method=rsync
 
 # Galera Node Configuration
-wsrep_node_address="{{ ansible_fact.default_ipv4.address }}"
-wsrep_node_name="{{ ansible_fact.default_ipv4.address }}"
+wsrep_node_address="{{ ansible_facts.default_ipv4.address }}"
+wsrep_node_name="{{ ansible_facts.default_ipv4.address }}"
