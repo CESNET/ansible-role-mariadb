@@ -3,8 +3,8 @@
 - name: MariaDB - Install MariaDB
   apt:
     name:
-      - python-pymysql
-      - python-mysqldb
+      - python3-pymysql
+      - python3-mysqldb
       - mariadb-server
     update_cache: yes
   tags:
@@ -19,20 +19,9 @@
   tags:
     - install
 
-- name: MariaDB - Disable mariadb login plugin
-  shell: >
-    mysql -u root --execute "use mysql;update user set plugin='' where User='root';flush privileges;"
-  when: root_pwd_check.rc == 0
-  tags:
-    - install
-
 - name: MariaDB - Set MariaDB root password for the first time (root@localhost)
-  mysql_user:
-    check_implicit_admin: yes
-    name: root
-    password: "{{ mariadb_root_password }}"
-    host: localhost
-    state: present
+  shell: >
+    mysql -u root --execute "ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('{{ mariadb_root_password}}')"
   when: root_pwd_check.rc == 0
   tags:
     - install
