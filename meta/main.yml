@@ -7,12 +7,11 @@ galaxy_info:
   company: CESNET
   description: Installs Mariadb and manages databases and users.
   license: Apache
-  min_ansible_version: 2.5
+  min_ansible_version: 2.12
   platforms:
     - name: Debian
       versions:
-        - stretch
-        - buster
+        - bullseye
   galaxy_tags:
     - database
     - mariadb
