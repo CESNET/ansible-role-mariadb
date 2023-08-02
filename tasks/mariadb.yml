@@ -61,23 +61,11 @@
     - install
     - scheme
 
-- name: MariaDB - Copy scripts to /tmp/
-  copy:
-    src: "{{ item.script }}.sql"
-    dest: "/tmp/{{ item.script }}.sql"
-  loop: "{{ mariadb_scripts }}"
-  loop_control:
-    label: "{{ item.script }}"
-  when: mariadb_is_master
-  tags:
-    - install
-    - scheme
-
 - name: MariaDB - Import a databases
   mysql_db:
     name: "{{ item.database }}"
     state: import
-    target: "/tmp/{{ item.script }}.sql"
+    target: "{{ item.script }}"
   loop: "{{ mariadb_scripts }}"
   when: mariadb_is_master
   tags:
