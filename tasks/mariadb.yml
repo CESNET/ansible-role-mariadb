@@ -1,7 +1,7 @@
 ---
 - assert:
-    that: ansible_distribution == "Debian" and ansible_distribution_major_version in [ "11" ]
-    msg: "Only Debian 11 is supported, this is {{ ansible_distribution }} {{ ansible_distribution_major_version }}"
+    that: ansible_distribution == "Debian" and ansible_distribution_major_version in [ "11", "12" ]
+    msg: "Only Debian 11 and 12 is supported, this is {{ ansible_distribution }} {{ ansible_distribution_major_version }}"
 
 - name: MariaDB - Install MariaDB
   apt:
