@@ -37,9 +37,11 @@ mariadb_users_privileges: []
 # Structure of script's which will be run on database
 # Example of structure:
 # mariadb_scripts:
-#   - script: script1
+#   - script: script1.sql
+#     path: /tmp
 #     database: dbname1
-#   - script: script2
+#   - script: script2.sql
+#     path: /var
 #     database: dbname1
 mariadb_scripts: []
 

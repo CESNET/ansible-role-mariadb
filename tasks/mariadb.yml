@@ -65,7 +65,7 @@
   mysql_db:
     name: "{{ item.database }}"
     state: import
-    target: "{{ item.script }}"
+    target: "{{ item.path }}/{{ item.script }}"
   loop: "{{ mariadb_scripts }}"
   when: mariadb_is_master
   tags:
