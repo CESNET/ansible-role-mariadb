@@ -23,7 +23,7 @@
     - install
 
 - name: MariaDB - Set MariaDB root password for the first time (root@localhost)
-  mysql_user:
+  ansible.mysql.mysql_user:
     login_unix_socket: /var/run/mysqld/mysqld.sock
     check_implicit_admin: yes
     name: root
@@ -44,7 +44,7 @@
     - install
 
 - name: MariaDB - Create a databases
-  mysql_db:
+  ansible.mysql.mysql_db:
     name: "{{ item }}"
     state: present
   loop: "{{ mariadb_databases_to_create }}"
@@ -53,7 +53,7 @@
     - scheme
 
 - name: MariaDB - Remove a databases
-  mysql_db:
+  ansible.mysql.mysql_db:
     name: "{{ item }}"
     state: absent
   loop: "{{ mariadb_databases_to_remove }}"
@@ -62,7 +62,7 @@
     - scheme
 
 - name: MariaDB - Import a databases
-  mysql_db:
+  ansible.mysql.mysql_db:
     name: "{{ item.database }}"
     state: import
     target: "{{ item.path }}/{{ item.script }}"
@@ -83,7 +83,7 @@
   notify: "restart mariadb"
 
 - name: MariaDB - Create database users
-  mysql_user:
+  ansible.mysql.mysql_user:
     name: "{{ item.login }}"
     password: "{{ item.password }}"
     host: "{{ item.host | default(omit) }}"
@@ -96,7 +96,7 @@
     - configuration
 
 - name: MariaDB - Remove database users
-  mysql_user:
+  ansible.mysql.mysql_user:
     name: "{{ item }}"
     state: absent
   loop: "{{ mariadb_users_to_remove }}"
@@ -104,7 +104,7 @@
     - configuration
 
 - name: MariaDB - Set privileges
-  mysql_user:
+  ansible.mysql.mysql_user:
     name: "{{ item.login }}"
     priv: "{{ item.privileges|join('/') }}"
     state: present
